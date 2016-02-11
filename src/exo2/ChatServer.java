@@ -10,7 +10,7 @@ public class ChatServer {
 	    	HelloImpl h = new HelloImpl ("Hello world !"); 
 	    	HelloItf h_skeleton = (HelloItf) UnicastRemoteObject.exportObject(h, 0); 
 	    	// Create a Chat remote object
-	    	ChatImpl s = new ChatImpl(); 
+	    	ChatImpl s = new ChatImpl();
 	    	ChatItf s_skeleton = (ChatItf) UnicastRemoteObject.exportObject(s, 0); 
 	    	
 	    	// Register the remote object in RMI registry with a given identifier 

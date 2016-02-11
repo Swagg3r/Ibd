@@ -5,32 +5,35 @@ import java.util.ArrayList;
 
 public class ServerImpl implements ServerItf {
 	
-	ArrayList<ChatClient> members;
+	ArrayList<Person> members;
 	ArrayList<String> historique;
 	
 	public ServerImpl() {
-		super();
+		members = new ArrayList<>();
+		historique = new ArrayList<>();
 	} 
 
-	@Override
 	public String sendMessage(Person p, String m) throws RemoteException {
 		return "[" + p.getNickName() + "] : " + m; 
 	}
 
-	@Override
 	public void subscribe(Person p) throws RemoteException {
-		// TODO Auto-generated method stub
+		members.add(p);
+		//Affiche : p a rejoint la salle de chat.
+		historique.add(p.getNickName()+" a rejoint la salle de chat");
+		//TODO : Envoyer notification de nouveau message a la liste de clients.
 	}
 
-	@Override
-	public void leave(Person p) throws RemoteException {
-		// TODO Auto-generated method stub
-		
+	public String leave(Person p) throws RemoteException {
+		members.remove(p);
+		//Affiche : p a quitter la salle de chat.
+		historique.add(p.getNickName()+" a quitté la salle de chat");
+		//TODO : Envoyer notification de nouveau message a la liste de clients.
+		return "Au revoir !";
 	}
 
-	@Override
-	public void recupMessage(Person p) throws RemoteException {
-		// TODO Auto-generated method stub
-		
+	public String recupMessage(Person p) throws RemoteException {
+		//TODO : Recuperation du dernier message ???
+		return historique.get(historique.size());
 	}
 }
