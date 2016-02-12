@@ -11,20 +11,9 @@ public class ChatClient {
 			  return;
 		  }
 		  String host = args[0];
-		  
-		  // Register the remote object in RMI registry with a given identifier 
-		  Registry registryClient = LocateRegistry.createRegistry(2021);
-		  
+
 		  // Get remote object reference
-		  Registry registryServer = LocateRegistry.getRegistry(Integer.parseInt(host)); 
-		  
-		  //upload client's methods
-		  ClientImpl c = new ClientImpl(); 
-		  ClientItf c_skeleton = (ClientItf) UnicastRemoteObject.exportObject(c, 0); 
-		  registryServer.bind("client", c_skeleton); 
-		  
-		  //download server's methods
-		  ServerItf c_stub = (ServerItf) registryServer.lookup("server"); 
+		  Registry registry = LocateRegistry.getRegistry(2020);
 		  
 		  // Person creation
 		  System.out.println("Choisissez votre pseudo");
@@ -33,19 +22,8 @@ public class ChatClient {
 		  String rep;
 		  Person p = new Person(str);
 		  
-		  // join chat
-		  c_stub.subscribe(p);
-		  // loop until leave chat
-		  do {
-			  str = sc.nextLine();
-			  System.out.println("str contient : ["+str+"]");
-		  rep = c_stub.sendMessage(p, str);
-		  // affichage de son propre message
-			  System.out.println(rep);
-		  } while(!str.equals("wq"));
-  
-  //Affiche un message de deconnexion pour l'utilisateur quittant la salle de chat.
-  System.out.println(str = c_stub.leave(p));
+		  //upload client's methods
+		  ClientImpl c = new ClientImpl(p); 
 	      
 	  } catch (Exception e)  { 
 		  System.err.println("Error on client: " + e) ; 
