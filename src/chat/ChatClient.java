@@ -23,7 +23,7 @@ public class ChatClient {
 		  Person p = new Person(str);
 		  
 		  //upload client's methods
-		  ClientImpl c = new ClientImpl(p); 
+		  ClientImpl c = new ClientImpl(p);
 	      
 	  } catch (Exception e)  { 
 		  System.err.println("Error on client: " + e) ; 
