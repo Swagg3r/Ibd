@@ -25,7 +25,6 @@ public class ChatClient {
             //upload client's methods
             ClientImpl c = new ClientImpl(p);
 
-            System.out.println("Je suis in da place !!");
             // join chat
             c.connect();
             // loop until leave chat
@@ -38,7 +37,7 @@ public class ChatClient {
             c.deconnexion();
 
         } catch (Exception e)  { 
-                System.err.println("Error on client: " + e) ; 
+                System.err.println("Error on client: " + e); 
         }
     }  
 }

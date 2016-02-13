@@ -8,9 +8,10 @@ import java.util.ArrayList;
 
 public class ServerImpl implements ServerItf {
 	
-	ArrayList<ClientItf> members;
-	ArrayList<String> historique;
-	Registry registry;
+	private ArrayList<ClientItf> members;
+	private ArrayList<String> historique;
+        private static int idGen = 0;
+	private Registry registry;
 	
 	public ServerImpl() {
 		members = new ArrayList<>();
@@ -31,19 +32,17 @@ public class ServerImpl implements ServerItf {
 	}
 
 	public void subscribe(Person p) throws RemoteException {
-		
-		try {
-                    //Changer cette methode pour lookup un id d'un client.
-                    ClientItf c_strub = (ClientItf) registry.lookup("client");
-                    members.add(c_strub);
+            try {
+                ClientItf c_strub = (ClientItf) registry.lookup(""+p.getId());
+                members.add(c_strub);
 
-                    historique.add(p.getNickName()+" a rejoint la salle de chat");
-                    for (int i = 0; i < members.size(); i++) {
-                        members.get(i).getMessage("["+p.getNickName()+"] a rejoint la salle !");
-                    }
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+                historique.add(p.getNickName()+" a rejoint la salle de chat");
+                for (int i = 0; i < members.size(); i++) {
+                    members.get(i).getMessage("["+p.getNickName()+"] a rejoint la salle !");
+                }
+            } catch (Exception e) {
+                    e.printStackTrace();
+            }
 	}
 
 	public String leave(Person p) throws RemoteException {
@@ -55,4 +54,8 @@ public class ServerImpl implements ServerItf {
             }
             return "Au revoir !";
 	}
+        
+        public int genId() throws RemoteException{
+            return idGen++;
+        }
 }

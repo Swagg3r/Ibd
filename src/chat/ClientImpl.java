@@ -7,27 +7,23 @@ import java.rmi.server.UnicastRemoteObject;
 
 public class ClientImpl implements ClientItf {
 	
-    private String nickname;
     Registry registry;
     Person pClient;
     ServerItf s_stub = null;
 
     public ClientImpl (Person p){
         try {
-            pClient = p;
             registry = LocateRegistry.getRegistry(2020);
+            s_stub = (ServerItf) registry.lookup("server");
+            
+            pClient = p;
+            pClient.setId(s_stub.genId());
+            
             ClientItf c_skeleton = (ClientItf) UnicastRemoteObject.exportObject(this, 0); 
-            registry.bind("client", c_skeleton);
-            nickname = p.getNickName();
-            //TODO : recuperer l'id du nouveau client pour l'exporter et le bind avec sont propre id
-            //Histoire de pouvoir de pouvoir l'identifier su coté serveur.
+            registry.bind(""+pClient.getId(), c_skeleton);
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public String handleMessage(Person p, String m) throws RemoteException {
-        return m;
     }
 
     public void getMessage(String message) throws RemoteException {
@@ -36,13 +32,6 @@ public class ClientImpl implements ClientItf {
     }
 
     public void connect() throws RemoteException {
-        try {
-            //download server's methods
-            s_stub = (ServerItf) registry.lookup("server");
-            System.out.println("Je suis in da connect");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         s_stub.subscribe(pClient);
     }	
 
