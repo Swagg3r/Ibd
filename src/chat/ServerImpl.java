@@ -33,25 +33,26 @@ public class ServerImpl implements ServerItf {
 	public void subscribe(Person p) throws RemoteException {
 		
 		try {
-			ClientItf c_strub = (ClientItf) registry.lookup("client");
-			members.add(c_strub);
-			
-			historique.add(p.getNickName()+" a rejoint la salle de chat");
-			for (int i = 0; i < members.size(); i++) {
-				members.get(i).getMessage("["+p.getNickName()+"] a rejoint la salle !");
-			}
+                    //Changer cette methode pour lookup un id d'un client.
+                    ClientItf c_strub = (ClientItf) registry.lookup("client");
+                    members.add(c_strub);
+
+                    historique.add(p.getNickName()+" a rejoint la salle de chat");
+                    for (int i = 0; i < members.size(); i++) {
+                        members.get(i).getMessage("["+p.getNickName()+"] a rejoint la salle !");
+                    }
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	public String leave(Person p) throws RemoteException {
-		members.remove(p);
-		//Affiche : p a quitter la salle de chat.
-		historique.add(p.getNickName()+" a quitté la salle de chat");
-		for (int i = 0; i < members.size(); i++) {
-			members.get(i).getMessage("["+p.getNickName()+"] a quitté la salle !");
-		}
-		return "Au revoir !";
+            members.remove(p);
+            //Affiche : p a quitter la salle de chat.
+            historique.add(p.getNickName()+" a quitté la salle de chat");
+            for (int i = 0; i < members.size(); i++) {
+                    members.get(i).getMessage("["+p.getNickName()+"] a quitté la salle !");
+            }
+            return "Au revoir !";
 	}
 }
