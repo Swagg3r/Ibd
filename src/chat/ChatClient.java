@@ -30,11 +30,14 @@ public class ChatClient {
             // loop until leave chat
             do {
                 str = sc.nextLine();
-                c.envoiMessage(str);
+                if (!str.equals("wq")) {
+                    c.envoiMessage(str);
+                }
             } while(!str.equals("wq"));
 
             //Deconnexion du client.
             c.deconnexion();
+            System.exit(0);
 
         } catch (Exception e)  { 
                 System.err.println("Error on client: " + e); 

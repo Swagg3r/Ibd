@@ -9,12 +9,14 @@ import java.util.ArrayList;
 public class ServerImpl implements ServerItf {
 	
 	private ArrayList<ClientItf> members;
+        private ArrayList<String> pseudos;
 	private ArrayList<String> historique;
         private static int idGen = 0;
 	private Registry registry;
 	
 	public ServerImpl() {
 		members = new ArrayList<>();
+                pseudos = new ArrayList<>();
 		historique = new ArrayList<>();
 		try {
 			registry = LocateRegistry.getRegistry(2020);
@@ -35,6 +37,7 @@ public class ServerImpl implements ServerItf {
             try {
                 ClientItf c_strub = (ClientItf) registry.lookup(""+p.getId());
                 members.add(c_strub);
+                pseudos.add(p.getNickName());
 
                 historique.add(p.getNickName()+" a rejoint la salle de chat");
                 for (int i = 0; i < members.size(); i++) {
@@ -46,11 +49,13 @@ public class ServerImpl implements ServerItf {
 	}
 
 	public String leave(Person p) throws RemoteException {
-            members.remove(p);
+            int numToRemove = pseudos.indexOf(p.getNickName());
+            members.remove(numToRemove);
+            pseudos.remove(numToRemove);
             //Affiche : p a quitter la salle de chat.
             historique.add(p.getNickName()+" a quitté la salle de chat");
             for (int i = 0; i < members.size(); i++) {
-                    members.get(i).getMessage("["+p.getNickName()+"] a quitté la salle !");
+                members.get(i).getMessage("["+p.getNickName()+"] a quitté la salle !");
             }
             return "Au revoir !";
 	}

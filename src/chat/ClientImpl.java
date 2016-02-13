@@ -40,6 +40,6 @@ public class ClientImpl implements ClientItf {
     }
 
     public void deconnexion() throws RemoteException {
-        s_stub.leave(pClient);
+        System.out.println(s_stub.leave(pClient));
     }
 }
