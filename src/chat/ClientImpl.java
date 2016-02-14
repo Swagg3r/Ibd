@@ -10,12 +10,14 @@ public class ClientImpl implements ClientItf {
     Registry registry;
     Person pClient;
     ServerItf s_stub = null;
+    Fenetre fe;
 
-    public ClientImpl (Person p){
+    public ClientImpl (Person p, Fenetre f){
         try {
             registry = LocateRegistry.getRegistry(2020);
             s_stub = (ServerItf) registry.lookup("server");
             
+            fe = f;
             pClient = p;
             pClient.setId(s_stub.genId());
             
@@ -28,7 +30,8 @@ public class ClientImpl implements ClientItf {
 
     public void getMessage(String message) throws RemoteException {
         //Affiche le message envoyé par le serveur
-        System.out.println(message);
+        //System.out.println(message);
+        fe.afficheMessage(message);
     }
 
     public void connect() throws RemoteException {
@@ -40,6 +43,7 @@ public class ClientImpl implements ClientItf {
     }
 
     public void deconnexion() throws RemoteException {
-        System.out.println(s_stub.leave(pClient));
+        fe.afficheMessage(s_stub.leave(pClient));
+        fe.afficheMessage("\nDéconnecté du serveur.\n");
     }
 }
