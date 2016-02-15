@@ -6,4 +6,5 @@ public interface ServerItf extends Remote {
 	public void subscribe(Person p) throws RemoteException;
 	public String leave(Person p) throws RemoteException;
         public int genId() throws RemoteException;
+        public String whoIsHere() throws RemoteException;
 }

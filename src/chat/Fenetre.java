@@ -70,7 +70,7 @@ public class Fenetre extends JFrame implements KeyListener, ActionListener, Mous
         message = new JTextArea();
         message.setEditable(false);
         message.setFont(new Font("Arial", Font.PLAIN, 14));
-        message.setText("Veuillez vous connecter au serveur pour afficher les messages.\nPour cela, cliquer sur Options > Connection\nRentrez 'd' pour vous deconnecter ou 'de' pour quitter l'application");
+        message.setText("Veuillez vous connecter au serveur pour afficher les messages.\nPour cela, cliquer sur Options > Connection");//\nRentrez 'd' pour vous deconnecter ou 'de' pour quitter l'application");
         pane.add(message);
         message.setBounds(10, 20, 480, 580);
         
@@ -102,18 +102,21 @@ public class Fenetre extends JFrame implements KeyListener, ActionListener, Mous
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == send) {
+            //Clic sur le bouton send
             String tmp = sendArea.getText();
             sendArea.setText("");
             try{
-                if (tmp.equals("d")) {
+                if (tmp.equals(":d")) {
                     c.deconnexion();
                     isConnect = false;
                     sendArea.setEditable(false);
                     send.setEnabled(false);
-                } else if (tmp.equals("de")) {
+                } else if (tmp.equals(":de")) {
                     c.deconnexion();
                     isConnect = false;
                     System.exit(0);
+                }else if(tmp.equals("/whoIsHere")){
+                    c.afficheMembres();
                 }else {
                     c.envoiMessage(tmp);
                 }
@@ -122,6 +125,7 @@ public class Fenetre extends JFrame implements KeyListener, ActionListener, Mous
             }
         }
         else if (e.getSource() == sous1) {
+            message.setText("");
             sendArea.setEditable(true);
             send.setEnabled(true);
             String nickname = JOptionPane.showInputDialog(this, "Choisissez votre pseudo :");
@@ -130,7 +134,7 @@ public class Fenetre extends JFrame implements KeyListener, ActionListener, Mous
             p = new Person(nickname);
             c = new ClientImpl(p,this);
             try {
-                // join chat
+                //On appel la fonction conect du protocol.
                 c.connect();
                 isConnect = true;
             } catch (Exception ex) {
@@ -138,6 +142,7 @@ public class Fenetre extends JFrame implements KeyListener, ActionListener, Mous
             }
         }
         else if (e.getSource() == sous2) {
+            //Clic sur deconnexion.
             if (isConnect) {
                 try {
                     c.deconnexion();
@@ -151,6 +156,8 @@ public class Fenetre extends JFrame implements KeyListener, ActionListener, Mous
             }
         }
         else if (e.getSource() == sous3) {
+            //Clic sur Quitter.
+            //Si le client est toujours connecter alors on le deconnecte avant qu'il puisse quitter.
             if (isConnect) {
                 try {
                     c.deconnexion();
@@ -161,6 +168,7 @@ public class Fenetre extends JFrame implements KeyListener, ActionListener, Mous
             System.exit(0);
         }
         else if (e.getSource() == sous6) {
+            //Clic sur auteur dans le deuxieme sous menus.
             JOptionPane.showMessageDialog(this, "Ce Chat a été réalisé par\n      Antoine Thebaud\n                  et\n Aurélien Monnet-Paquet");
         }
     }
@@ -198,13 +206,12 @@ public class Fenetre extends JFrame implements KeyListener, ActionListener, Mous
     public void mouseMoved(MouseEvent e) {
         
     }
-    
-//    public static void main(String [] args) { 
-//        Fenetre fenetre = new Fenetre();
-//    }
 
     @Override
     public void keyTyped(KeyEvent e) {
+        //La touche entrée a ete appuyé.
+        //Le keyListener est uniquement pour la zone de texte (envoi de message)
+        //Ce qui permet d'envoyer le message pour un appuy sur entrée dans la zone d'ecriture du message.
         if (e.getKeyChar() == '\n') {
             send.doClick();
         }

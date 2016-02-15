@@ -30,13 +30,12 @@ public class ClientImpl implements ClientItf {
 
     public void getMessage(String message) throws RemoteException {
         //Affiche le message envoyé par le serveur
-        //System.out.println(message);
         fe.afficheMessage(message);
     }
 
     public void connect() throws RemoteException {
         s_stub.subscribe(pClient);
-    }	
+    }
 
     public void envoiMessage(String message) throws RemoteException {
         s_stub.sendMessage(pClient, message);
@@ -45,5 +44,14 @@ public class ClientImpl implements ClientItf {
     public void deconnexion() throws RemoteException {
         fe.afficheMessage(s_stub.leave(pClient));
         fe.afficheMessage("\nDéconnecté du serveur.\n");
+    }
+    
+    public void setPseudo(String nick) throws RemoteException{
+        pClient.setNickName(nick);
+    }
+    
+    public void afficheMembres() throws RemoteException{
+        String tmp = "Personne présentent sur le serveur : \n";
+        fe.afficheMessage(tmp+s_stub.whoIsHere());
     }
 }

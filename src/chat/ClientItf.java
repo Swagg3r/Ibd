@@ -5,4 +5,5 @@ public interface ClientItf extends Remote {
 	public void getMessage(String message) throws RemoteException;
         public void envoiMessage(String message) throws RemoteException;
         public void deconnexion() throws RemoteException;
+        public void setPseudo(String nick) throws RemoteException;
 }
