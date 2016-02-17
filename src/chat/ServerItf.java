@@ -7,4 +7,5 @@ public interface ServerItf extends Remote {
 	public String leave(Person p) throws RemoteException;
         public int genId() throws RemoteException;
         public String whoIsHere() throws RemoteException;
+        public String mp(String m, String nick) throws RemoteException;
 }

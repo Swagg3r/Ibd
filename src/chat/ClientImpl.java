@@ -51,7 +51,11 @@ public class ClientImpl implements ClientItf {
     }
     
     public void afficheMembres() throws RemoteException{
-        String tmp = "Personne présentent sur le serveur : \n";
+        String tmp = "Actuellement sur le serveur : \n";
         fe.afficheMessage(tmp+s_stub.whoIsHere());
     }
+
+	public void mp(String substring) throws RemoteException {
+		fe.afficheMessage(s_stub.mp(substring,pClient.getNickName()));
+	}
 }

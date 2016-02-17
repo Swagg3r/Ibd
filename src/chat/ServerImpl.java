@@ -33,7 +33,7 @@ public class ServerImpl implements ServerItf {
 		}
 	} 
 
-	public void sendMessage(Person p, String m) throws RemoteException {
+	public synchronized void sendMessage(Person p, String m) throws RemoteException {
 		//Appel a la fonction du client getMessage();
                 String heure = new SimpleDateFormat("[HH:mm:ss]",Locale.FRANCE).format(new Date());
                 heure += " ";
@@ -41,15 +41,22 @@ public class ServerImpl implements ServerItf {
                 historique.add(tmp);
             try {
                 copieHistorique(tmp+"\n");
-            } catch (IOException ex) {
-                ex.getStackTrace();
+                for (ClientItf client : members) {
+                	try{
+                		client.getMessage(tmp);
+                	}catch (Exception exe){
+                		int pos = members.indexOf(client);
+                		members.remove(pos);
+                		pseudos.remove(pos);
+                		System.out.println(pseudos.get(pos)+" a ete tué et supprimé");
+                	}
+                }
+            } catch (Exception ex) {
+            	System.out.println("Erreur, un client n'est pas connecté.");
             }
-		for (ClientItf client : members) {
-                    client.getMessage(tmp);
-		}
 	}
 
-	public void subscribe(Person p) throws RemoteException {
+	public synchronized void subscribe(Person p) throws RemoteException {
             try {
                 //On recupere le pseudo du client qui souhaite se connecter.
                 String pseudo = p.getNickName();
@@ -86,7 +93,7 @@ public class ServerImpl implements ServerItf {
             }
 	}
 
-	public String leave(Person p) throws RemoteException {
+	public synchronized String leave(Person p) throws RemoteException {
             int numToRemove = pseudos.indexOf(p.getNickName());
             members.remove(numToRemove);
             pseudos.remove(numToRemove);
@@ -123,11 +130,29 @@ public class ServerImpl implements ServerItf {
             }
         }
 
-    public String whoIsHere() throws RemoteException {
+    public synchronized String whoIsHere() throws RemoteException {
         String tmp = "";
         for (int i = 0; i < pseudos.size(); i++) {
             tmp += pseudos.get(i)+"\n";
         }
       return tmp;
     }
+
+	@Override
+	public String mp(String m, String nick) throws RemoteException {
+		//System.out.println("Dans la fonction !["+m+"]");
+		String pseudo = m.substring(0, m.indexOf(' '));
+		//System.out.println("["+pseudo+"]");
+		String message = m.substring(m.indexOf(' ')+1);
+		String messagePour = "Message privé recu de ["+nick+"] : "+ message;
+		//System.out.println("["+message+"]");
+		String heure = new SimpleDateFormat("[HH:mm:ss]",Locale.FRANCE).format(new Date());
+		String retour = heure+" Message envoyé a  ["+pseudo+"] : "+message;
+		int pos = pseudos.indexOf(pseudo);
+		if (pos != -1) {
+			members.get(pos).getMessage(messagePour);
+			return retour;
+		}
+		return "Ce client n'existe pas.";
+	}
 }

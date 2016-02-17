@@ -55,7 +55,7 @@ public class Fenetre extends JFrame implements KeyListener, ActionListener, Mous
         send.addActionListener(this);
         send.setEnabled(false);
         pane.add(send);
-        send.setBounds(320, 630, 90, 30);
+        send.setBounds(320, 612, 90, 30);
         send.setToolTipText("Cliquez pour envoyer");
         
         //Zone de texte JTextField
@@ -64,7 +64,7 @@ public class Fenetre extends JFrame implements KeyListener, ActionListener, Mous
         sendArea.addKeyListener(this);
         sendArea.setEditable(false);
         pane.add(sendArea);
-        sendArea.setBounds(10, 630, 300, 30);
+        sendArea.setBounds(10, 612, 300, 30);
         
         //Zone d'affichage des messages JTextArea
         message = new JTextArea();
@@ -77,6 +77,12 @@ public class Fenetre extends JFrame implements KeyListener, ActionListener, Mous
         //Bouton clear
         
         //Bouton de messages privé : mp
+        mp = new JButton("MP");
+        mp.addActionListener(this);
+        mp.setEnabled(false);
+        pane.add(mp);
+        mp.setBounds(420, 612, 60, 30);
+        mp.setVisible(false);
         
         //Placement des menus
         barreMenu.add(menu1);
@@ -111,13 +117,22 @@ public class Fenetre extends JFrame implements KeyListener, ActionListener, Mous
                     isConnect = false;
                     sendArea.setEditable(false);
                     send.setEnabled(false);
+                    mp.setEnabled(false);
                 } else if (tmp.equals(":de")) {
                     c.deconnexion();
                     isConnect = false;
                     System.exit(0);
                 }else if(tmp.equals("/whoIsHere")){
                     c.afficheMembres();
-                }else {
+                }else if(tmp.equals("\n") || tmp.equals("")){
+                }else if(tmp.substring(0,3).matches("/w ")){
+                	System.out.println("Je suis in da place !");
+                	//tmp.replaceAll("/w ", "");
+                	c.mp(tmp.substring(3,tmp.length()));
+                }
+                else {
+                	System.out.println("["+tmp+"[");
+                	System.out.println("["+tmp.substring(0,2)+"]");
                     c.envoiMessage(tmp);
                 }
             } catch (Exception ex){
@@ -128,6 +143,7 @@ public class Fenetre extends JFrame implements KeyListener, ActionListener, Mous
             message.setText("");
             sendArea.setEditable(true);
             send.setEnabled(true);
+            mp.setEnabled(true);
             String nickname = JOptionPane.showInputDialog(this, "Choisissez votre pseudo :");
             message.insert("\n["+nickname+"] tente de se connecter au serveur\n",0);
             
@@ -148,6 +164,7 @@ public class Fenetre extends JFrame implements KeyListener, ActionListener, Mous
                     c.deconnexion();
                     sendArea.setEditable(false);
                     send.setEnabled(false);
+                    mp.setEnabled(false);
                 } catch (Exception ex) {
                    ex.getStackTrace();
                 }
@@ -170,6 +187,9 @@ public class Fenetre extends JFrame implements KeyListener, ActionListener, Mous
         else if (e.getSource() == sous6) {
             //Clic sur auteur dans le deuxieme sous menus.
             JOptionPane.showMessageDialog(this, "Ce Chat a été réalisé par\n      Antoine Thebaud\n                  et\n Aurélien Monnet-Paquet");
+        }else if (e.getSource() == mp) {
+            //Clic sur auteur dans le deuxieme sous menus.
+            JOptionPane.showMessageDialog(this, "clic bouton MP");
         }
     }
 
